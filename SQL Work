@@ -1,0 +1,29 @@
+1.1	SELECT CustomerID, CompanyName, City, Address, Region, PostalCode, Country FROM Customers WHERE City = 'Paris' or City = 'London';
+
+1.2	SELECT * FROM products WHERE QuantityPerUnit LIKE '%bottles';
+
+1.3	SELECT Products.*, Suppliers.CompanyName, Suppliers.Country FROM Products LEFT JOIN Suppliers ON Products.SupplierID=Suppliers.SupplierID WHERE QuantityPerUnit LIKE '%bottles';
+
+1.4	SELECT count(Categories.CategoryID) 'Count', Categories.CategoryName FROM Categories LEFT JOIN Products ON Categories.CategoryID=Products.CategoryID GROUP BY CategoryName ORDER BY Count DESC;
+
+1.5	SELECT FirstName + ' ' + LastName 'Name', City FROM Employees WHERE Country = 'UK';
+
+1.6
+SELECT R.RegionDescription
+,CAST(SUM(ROUND((OD.UnitPrice * OD.Quantity)-(OD.UnitPrice * OD.Quantity * OD.Discount) + O.Freight, 2)) AS MONEY) AS Total_Sales
+FROM Territories T
+JOIN Region R
+	ON T.RegionID = R.RegionID
+JOIN EmployeeTerritories ET
+	ON T.TerritoryID = ET.TerritoryID
+JOIN Orders O
+	ON ET.EmployeeID = O.EmployeeID
+JOIN [Order Details] OD
+	ON O.OrderID = OD.OrderID
+GROUP BY R.RegionDescription
+HAVING CAST(SUM(ROUND((OD.UnitPrice * OD.Quantity)-(OD.UnitPrice * OD.UnitQuantity * OD.Discount) + O.Freight, 2)) AS MONEY) > 1000000
+
+1.7	SELECT COUNT(OrderID) 'Order Count' FROM Orders WHERE Freight > 100.00 AND (ShipCountry = 'USA' or ShipCountry = 'UK');
+
+1.8	SELECT TOP 1 [Order Details].OrderID, ROUND(SUM(UnitPrice*Quantity), 2) 'PriceTotal',
+ROUND(SUM((UnitPrice*Quantity)*Discount), 2) 'Reduction' FROM [Order Details] GROUP BY OrderID ORDER BY Reduction DESC;
